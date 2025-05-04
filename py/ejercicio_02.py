@@ -11,13 +11,10 @@ for col in cols:
     df[col] = pd.to_numeric(df[col], errors='coerce')
 df['BrewMethod'] = df['BrewMethod'].fillna('Desconocido')
 
-# Eliminar filas con datos clave faltantes
 df_clean = df.dropna(subset=['Efficiency', 'IBU', 'ABV', 'BoilTime', 'PrimaryTemp'])
 
-# Limitar eficiencia a rango 0–100
 df_clean = df_clean[(df_clean['Efficiency'] >= 0) & (df_clean['Efficiency'] <= 100)]
 
-# Crear figura
 fig = go.Figure()
 
 # Agrupar por método de elaboración (All Grain, Extract, BIAB, etc.)

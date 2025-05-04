@@ -2,28 +2,28 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
 
-# Cargar el dataset
-data = pd.read_csv('Semana_05/doc/housing-with-missing-1.csv', sep=';')
+df = pd.read_csv('Semana_05/doc/housing-with-missing-1.csv', sep=';')
+df.replace(["NA", "null", "none", ""], np.nan, inplace=True)
+df = df.apply(pd.to_numeric, errors='coerce')
 
-# Mostrar los datos originales
-print("Datos originales:")
-print(data)
+print("Antes de imputar:\n", df.isnull().sum())
 
-# Imputar valores faltantes con la media de cada columna
-data_imputed_mean = data.fillna(data.mean())
+imp = IterativeImputer(random_state=0)
+df_imp = pd.DataFrame(imp.fit_transform(df), columns=df.columns)
 
-# Visualizar los datos originales y los imputados
-plt.figure(figsize=(12, 6))
+print("\nDespués de imputar:\n", df_imp.isnull().sum())
 
-# Gráfico de los datos originales
-plt.subplot(1, 2, 1)
-sns.heatmap(data.isnull(), cbar=False, cmap='viridis')
-plt.title('Datos Originales con Valores Faltantes')
+plt.figure(figsize=(12, 5))
+for i, data in enumerate([df, df_imp]):
+    plt.subplot(1, 2, i+1)
+    sns.heatmap(data.isnull(), cbar=True, cmap="YlGnBu", yticklabels=False)
+    plt.title("Antes" if i == 0 else "Después")
+    plt.xlabel("Variables")
+    plt.ylabel("Filas")
 
-# Gráfico de los datos imputados
-plt.subplot(1, 2, 2)
-sns.heatmap(data_imputed_mean.isnull(), cbar=False, cmap='viridis')
-plt.title('Datos Imputados (Media)')
-
+plt.suptitle("Valores Faltantes - Antes y Después de Imputación", fontsize=14)
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()

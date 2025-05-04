@@ -1,34 +1,29 @@
 import pandas as pd
 import plotly.graph_objects as go
 
-# Leer el archivo CSV
-data = pd.read_csv('Semana_05/doc/recipeData2.csv', sep=';')  # Asegúrate de usar el separador correcto
+data = pd.read_csv('Semana_05/doc/recipeData2.csv', sep=';')
 
-# Extraer las columnas para las coordenadas
-x = data['IBU']  # Amargor
-y = data['Color']  # Color
-z = data['ABV']  # Porcentaje de alcohol
+x = data['IBU']
+y = data['Color']
+z = data['ABV']
 
-# Crear un gráfico 3D con Plotly
 fig = go.Figure()
 
-# Agregar las cervezas como puntos en el gráfico
 fig.add_trace(go.Scatter3d(
     x=x, y=y, z=z,
     mode='markers',
     marker=dict(
         size=4,
-        color=z,  # Color basado en el ABV
-        colorscale='Viridis',  # Mapa de colores
+        color=z,
+        colorscale='Viridis',
         opacity=0.8,
         colorbar=dict(title='ABV (%)'),
         line=dict(width=0)
     ),
-    text=[f'Beer ID: {beer_id}' for beer_id in data['BeerID']],  # Etiquetas de cervezas
-    hoverinfo='text'  # Mostrar etiquetas al pasar el mouse
+    text=[f'Beer ID: {beer_id}' for beer_id in data['BeerID']],
+    hoverinfo='text'
 ))
 
-# Personalizar el gráfico
 fig.update_layout(
     title='Gráfico 3D de Cervezas',
     scene=dict(
@@ -45,5 +40,4 @@ fig.update_layout(
     font=dict(color='white')
 )
 
-# Mostrar el gráfico
 fig.show()
